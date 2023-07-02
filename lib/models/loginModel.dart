@@ -1,12 +1,12 @@
 class CartaLoginModel {
   bool? status;
-  String message = '';
+  // String message = '';
   String token = '';
   UserData? data;
 
   CartaLoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
+    // message = json['message'];
     token = json['token'];
     data = json['u'] != null ? UserData.fromJson(json['u']) : null;
   }

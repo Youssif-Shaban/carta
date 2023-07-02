@@ -1,5 +1,6 @@
 import 'package:carta/models/allTransactions.dart';
 import 'package:carta/pages/fine/finesCubit/fineStates.dart';
+import 'package:carta/shared/constants/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../network/remote/dio_Helper.dart';
@@ -14,7 +15,7 @@ class FineCubit extends Cubit<FinesStates> {
 
   void getTransactions() {
     DioHelper.getData(
-      url: 'http://localhost:4242/transactions',
+      url: 'http://192.168.1.178:4242/transactions/$ssn/user',
       token: token,
     ).then((value) {
       finemodel = TransactionsModel.fromJson(value.data);

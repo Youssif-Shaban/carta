@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:carta/Layout/layoutCubit.dart';
@@ -11,12 +12,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-class AddVehicleScreen extends StatefulWidget {
+class SignupScreen extends StatefulWidget {
   @override
-  State<AddVehicleScreen> createState() => _AddVehicleScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _AddVehicleScreenState extends State<AddVehicleScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   File? ifile;
 
   void pickerimage() async {
@@ -32,73 +33,56 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
   Widget build(BuildContext context) {
     final addVehicleformfield = GlobalKey<FormState>();
 
-    var vIdcontroller = TextEditingController();
-    var licenceIdcontroller = TextEditingController();
-    var vClasscontroller = TextEditingController();
-    var trafficunitController = TextEditingController();
-    var licenceCreatecontroller = TextEditingController();
-    var licenceExpirecontroller = TextEditingController();
-    var manufacController = TextEditingController();
-    var modelController = TextEditingController();
-    var manufacYearcontroller = TextEditingController();
-    var colorController = TextEditingController();
+    var userNameController = TextEditingController();
+    var userssnController = TextEditingController();
+    var manufacturerNumberController = TextEditingController();
+    var userEmailController = TextEditingController();
+    var userPasswordController = TextEditingController();
+    var userAddressController = TextEditingController();
+    var userJobController = TextEditingController();
+    var userNationalityController = TextEditingController();
+    var userPhoneController = TextEditingController();
+    var userbdController = TextEditingController();
+    var usergovernorateController = TextEditingController();
+    // var userbd = TextEditingController();
 
-    Future<void> addCar(
-      String vId,
-      String licenceId,
-      String vClass,
-      String trafficunit,
-      String licenceCreate,
-      String licenceExpire,
-      String manufac,
-      String model,
-      String manufacYear,
-      String color,
-      File image,
+    Future<void> addUser(
+      String userName,
+      String userssn,
+      String manufacturerNumber,
+      String userEmail,
+      String userPassword,
+      String userAddress,
+      String userJob,
+      String userNationality,
+      String userPhone,
+      String userbd,
+      String usergovernorate,
     ) async {
-      var headers = {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJfc3NuIjoiMzAxMTAzMDIzMDAxMTMiLCJ1c2VyX25hbWUiOiJnZW9yZ2UiLCJtYW51ZmFjdHVyZXJfbnVtYmVyIjoiMSIsInVzZXJfZW1haWwiOiJnZW9yZ2VAYWRtaW4uY29tIiwidXNlcl9wYXNzd29yZCI6IiQyYiQxMCRROUdWOWx1MjhIcS40cEplREE3S2MuZ09SRnJxZXVTNXFmR2dRZVUzZU9ETXZ1N1RuVFVnNiIsInVzZXJfYWRkcmVzcyI6ImZheW91bSIsInVzZXJfam9iIjoic3R1ZGVudCIsInVzZXJfbmF0aW9uYWxpdHkiOiJFZ3lwdGlhbiIsInVzZXJfcGhvbmUiOiIwMTAyNzgyNzY1NCIsInVzZXJfYmQiOiIzMC0xMC0yMDAxIiwidXNlcl9nb3Zlcm5vcmF0ZSI6ImZheW91bSIsImlzX2FkbWluIjoiYWRtaW4ifSwiaWF0IjoxNjg0MzM5NzE2fQ.7rkN0SIW_7RRDF-dVk1FjL4JZNeTHtuKdS1kCdU7bjI'
-      };
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('http://192.168.1.9:4242/vehicles'));
-      request.fields.addAll({
-        'vehicle_id': vId,
-        'license_id': licenceId,
-        'vehicle_class': vClass,
-        'traffic_unit': trafficunit,
-        'license_create_date': licenceCreate,
-        'license_expired_date': licenceExpire,
-        'manufacturer': manufac,
-        'model': model,
-        'manufacturering_year': manufacYear,
-        'color': color,
+      var headers = {'Content-Type': 'application/json'};
+      var request =
+          http.Request('POST', Uri.parse('http://localhost:4242/users/'));
+      request.body = json.encode({
+        "user_name": userName,
+        "user_ssn": userssn,
+        "manufacturer_number": manufacturerNumber,
+        "user_email": userEmail,
+        "user_password": userPassword,
+        "user_address": userAddress,
+        "user_job": userJob,
+        "user_nationality": userNationality,
+        "user_phone": userPhone,
+        "user_bd": userbd,
+        "user_governorate": usergovernorate
       });
-      request.files.add(await http.MultipartFile.fromPath('image', image.path));
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
-        print("successfully sent");
       } else {
-        print("not sent");
-        print(response.reasonPhrase.toString());
-      }
-    }
-
-    File? carimage;
-    final _piker = ImagePicker();
-
-    Future getImage() async {
-      final pickedfile = await _piker.pickImage(source: ImageSource.gallery);
-      if (pickedfile != null) {
-        carimage = File(pickedfile.path);
-        print(carimage);
-      } else {
-        print("No imge selected !");
+        print(response.reasonPhrase);
       }
     }
 
@@ -123,7 +107,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 250,
                   ),
                   Text(
-                    "Enter your Car Details",
+                    "Enter your Data",
                     style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
@@ -133,7 +117,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 20,
                   ),
                   TextFormField(
-                    controller: vIdcontroller,
+                    controller: userNameController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -150,7 +134,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'v_idController',
+                      labelText: 'userNameController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -164,7 +148,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: licenceIdcontroller,
+                    controller: userssnController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -181,7 +165,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'licenceIdcontroller',
+                      labelText: 'userssnController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -195,7 +179,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: vClasscontroller,
+                    controller: manufacturerNumberController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -212,7 +196,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'vClasscontroller',
+                      labelText: 'manufacturerNumberController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -226,7 +210,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: trafficunitController,
+                    controller: userEmailController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -243,7 +227,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'trafficunitController',
+                      labelText: 'userEmailController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -257,7 +241,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: licenceCreatecontroller,
+                    controller: userPasswordController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -274,7 +258,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'licenceCreatecontroller',
+                      labelText: 'userPasswordController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -288,7 +272,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: licenceExpirecontroller,
+                    controller: userAddressController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -305,7 +289,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'licenceExpirecontroller',
+                      labelText: 'userAddressController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -319,7 +303,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: manufacController,
+                    controller: userJobController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -336,7 +320,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'manufacController',
+                      labelText: 'userJobController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -350,7 +334,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: modelController,
+                    controller: userNationalityController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -367,7 +351,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'modelController',
+                      labelText: 'userNationalityController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -381,7 +365,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: manufacYearcontroller,
+                    controller: userPhoneController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -398,7 +382,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'manufacYearcontroller',
+                      labelText: 'userPhoneController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -412,7 +396,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     height: 30,
                   ),
                   TextFormField(
-                    controller: colorController,
+                    controller: userbdController,
 
                     keyboardType: TextInputType.text,
                     //make the @ sign visible in the keyboard during writing the email
@@ -429,7 +413,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       // }
                     },
                     decoration: InputDecoration(
-                      labelText: 'colorController',
+                      labelText: 'userbdController',
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 30),
                       border: OutlineInputBorder(
@@ -442,21 +426,36 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              getImage();
-                            },
-                            child: Text(
-                              "Upload image",
-                            )),
-                        // image == null ? Text("  ") : Text("$image"),
-                      ],
+                  TextFormField(
+                    controller: usergovernorateController,
+
+                    keyboardType: TextInputType.text,
+                    //make the @ sign visible in the keyboard during writing the email
+                    onFieldSubmitted: (String value) {},
+                    validator: (value) {
+                      // bool emailvalid = RegExp(
+                      //         r"^[a-zA-Z0-9.a-zA-z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\/[a-zA-Z]+")
+                      //     .hasMatch(value!);
+                      if (value!.isEmpty) {
+                        return "please enter your colorController Address";
+                      }
+                      // else if (!emailvalid) {
+                      //   return "enter valid email";
+                      // }
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'usergovernorateController',
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 30),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      prefixIcon: Icon(
+                        Icons.email,
+                      ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   SizedBox(
                     height: 30,
@@ -466,18 +465,19 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                     //state is! CartaLoginLoadingState,
                     builder: (context) => ElevatedButton(
                         onPressed: () {
-                          addCar(
-                              vIdcontroller.text,
-                              licenceIdcontroller.text,
-                              vClasscontroller.text,
-                              trafficunitController.text,
-                              licenceCreatecontroller.text,
-                              licenceExpirecontroller.text,
-                              manufacController.text,
-                              modelController.text,
-                              manufacYearcontroller.text,
-                              colorController.text,
-                              carimage!);
+                          addUser(
+                            userNameController.text,
+                            userssnController.text,
+                            manufacturerNumberController.text,
+                            userEmailController.text,
+                            userPasswordController.text,
+                            userAddressController.text,
+                            userJobController.text,
+                            userNationalityController.text,
+                            userPhoneController.text,
+                            userbdController.text,
+                            usergovernorateController.text,
+                          );
                           // if (addVehicleformfield.currentState!.validate()) {
                           //   //verify backend
                           //   LayoutCubit.get(context).uservehicle(

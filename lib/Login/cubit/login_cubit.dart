@@ -17,7 +17,7 @@ class CartaLoginCubit extends Cubit<CartaLoginStates> {
   }) {
     emit(CartaLoginLoadingState());
     DioHelper.postData(
-      url: 'http://192.168.1.9:4242/users/login',
+      url: 'http://192.168.1.178:4242/users/login',
       data: {
         'user_email': email,
         'user_password': password,
@@ -27,8 +27,6 @@ class CartaLoginCubit extends Cubit<CartaLoginStates> {
       cartaloginmodel = CartaLoginModel.fromJson(value.data);
       print(value.data['message']);
       print(cartaloginmodel.data?.usernationality);
-      // print(loginmodel.status);
-      //print(loginmodel.u?.user_nationality);
 
       emit(CartaLoginSuccessState(cartaloginmodel));
     }).catchError((error) {

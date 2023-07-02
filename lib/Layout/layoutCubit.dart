@@ -51,6 +51,44 @@ class LayoutCubit extends Cubit<LayoutStates> {
     emit(CartaBottomNavState());
   }
 
+  void uservehicle({
+    required String vIdcontroller,
+    required String licenceIdcontroller,
+    required String vClasscontroller,
+    required String trafficunitController,
+    required String licenceCreatecontroller,
+    required String licenceExpirecontroller,
+    required String manufacController,
+    required String modelController,
+    required String manufacYearcontroller,
+    required String colorController,
+    required File image,
+  }) {
+    //emit(CartaLoginLoadingState());
+    DioHelper.postData(
+      url: 'http://192.168.1.9:4242/vehicles',
+      data: {
+        'vehicle_id': vIdcontroller,
+        'license_id': licenceIdcontroller,
+        'vehicle_class': vClasscontroller,
+        'traffic_unit': trafficunitController,
+        'license_create_date': licenceCreatecontroller,
+        'license_expired_date': licenceExpirecontroller,
+        'manufacturer': manufacController,
+        'model': modelController,
+        'manufacturering_year': manufacYearcontroller,
+        'color': colorController,
+        'image': image,
+      },
+    ).then((value) {
+//      emit(CartaLoginSuccessState(cartaloginmodel));
+    }).catchError((error) {
+      print(error.toString());
+      // emit(CartaLoginErrorState(error.toString()));
+      print(error.toString());
+    });
+  }
+
   // late VehiclesModel vehiclesmodel;
 
   // void getvehicles() {

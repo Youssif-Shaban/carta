@@ -1,5 +1,6 @@
 import 'package:carta/models/loginModel.dart';
 import 'package:carta/network/local/cache_helper.dart';
+import 'package:carta/pages/signup.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 //import 'package:p/Layout/carta/carta_layout.dart';
 import 'package:carta/Login/cubit/login_states.dart';
@@ -36,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.center,
               color: Colors.green,
               height: 50,
-              child: Text(state.cartaloginmodel.message),
+              child: Text("you login successfully"),
             )));
             CacheHelper.saveData(
                 key: 'ssn', value: state.cartaloginmodel.data?.userssn);
@@ -62,14 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
               navigateTo(context, layoutScreen());
             });
           } else {
-            print(state.cartaloginmodel.message);
+            print("failed to login");
 
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Container(
               alignment: Alignment.center,
               color: Colors.red,
               height: 50,
-              child: Text(state.cartaloginmodel.message),
+              child: Text("failed to login"),
             )));
           }
         }
@@ -173,27 +174,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     ConditionalBuilder(
                       condition: state is! CartaLoginLoadingState,
-                      builder: (context) => ElevatedButton(
-                          onPressed: () {
-                            if (_formfield.currentState!.validate()) {
-                              //verify backend
-                              CartaLoginCubit.get(context).userLogin(
-                                  email: emailController.text,
-                                  password: passwordController.text);
-                              //navigateTo(context, layoutScreen());
-
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => CartaLayout()));
-                            }
-                          },
-                          child: Text(
-                            "submit",
-                          )),
+                      builder: (context) => Column(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                if (_formfield.currentState!.validate()) {
+                                  //verify backend
+                                  CartaLoginCubit.get(context).userLogin(
+                                      email: emailController.text,
+                                      password: passwordController.text);
+                                }
+                              },
+                              child: Text(
+                                "submit",
+                              )),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
                       fallback: (context) =>
                           Center(child: CircularProgressIndicator()),
                     ),
+
+                    ElevatedButton(
+                        onPressed: () {
+                          navigateTo(context, SignupScreen());
+                        },
+                        child: Text(
+                          "signup",
+                        )),
                   ]),
                 ),
               ),

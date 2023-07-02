@@ -41,7 +41,7 @@ dependencies:
   conditional_builder_null_safety: ^0.0.6
   shared_preferences: ^2.1.1
   fluttertoast: ^8.2.2
-  image_picker: ^0.8.7+5
+  image_picker: ^0.8.9
   webview_flutter: ^4.2.2
   url_launcher: ^6.1.11
 
